@@ -13,7 +13,7 @@ export default function TiendaPage() {
   const [monto, setMonto] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
-  // Modal Nuevo Docente
+  // Modal Nuevo Docentes
   const [showModal, setShowModal] = useState(false)
   const [nuevoNombre, setNuevoNombre] = useState('')
   const [nuevoPuesto, setNuevoPuesto] = useState('')
