@@ -1,13 +1,13 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabase' 
-import { PlusCircle, Send, Loader2, Users, Wallet, UserPlus, X, CheckCircle2 } from 'lucide-react'
+import { PlusCircle, Save, Loader2, Users, Wallet, UserPlus, X, CheckCircle2 } from 'lucide-react'
 
 export default function TiendaPage() {
   const [docentes, setDocentes] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
-  
+
   // Formulario Fiado
   const [docenteId, setDocenteId] = useState('')
   const [monto, setMonto] = useState('')
@@ -29,7 +29,7 @@ export default function TiendaPage() {
         .from('docentes')
         .select('*, deudas(monto)')
         .order('nombre')
-      
+
       if (error) throw error
       setDocentes(data || [])
     } catch (err: any) {
@@ -69,11 +69,10 @@ export default function TiendaPage() {
           descripcion: descripcion 
         }])
       if (error) throw error
-      const docente = docentes.find(d => d.id === docenteId)
-      const url = `https://wa.me/502XXXXXXXX?text=${encodeURIComponent(`Hola ${docente.nombre}, se registró un consumo de Q${monto} por ${descripcion}.`)}`
-      setMonto(''); setDescripcion('')
+      
+      // Limpieza de campos y actualización de lista
+      setMonto(''); setDescripcion(''); setDocenteId('')
       await cargarDatos()
-      window.open(url, '_blank')
     } catch (err: any) {
       alert("Error: " + err.message)
     } finally {
@@ -109,8 +108,8 @@ export default function TiendaPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 p-3 sm:p-6">
       <div className="max-w-6xl mx-auto">
-        
-        {/* Header - Mobile Friendly */}
+
+        {/* Header */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div className="w-full">
             <h1 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">Tienda Control</h1>
@@ -125,10 +124,9 @@ export default function TiendaPage() {
           </div>
         </header>
 
-        {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* Registro - Ocupa ancho completo en móvil */}
+
+          {/* Registro */}
           <section className="w-full">
             <div className="bg-white p-5 rounded-3xl shadow-xl shadow-slate-200/40 border border-slate-100">
               <h2 className="text-lg font-bold mb-5 flex items-center gap-2 text-slate-800">
@@ -168,13 +166,13 @@ export default function TiendaPage() {
                   disabled={loading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-100"
                 >
-                  {loading ? <Loader2 className="animate-spin" /> : <><Send size={18}/> Registrar y Notificar</>}
+                  {loading ? <Loader2 className="animate-spin" /> : <><Save size={18}/> Registrar Fiado</>}
                 </button>
               </form>
             </div>
           </section>
 
-          {/* Listado de Docentes - 2 columnas en pantallas grandes */}
+          {/* Listado de Docentes */}
           <section className="lg:col-span-2 w-full">
             <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 min-h-[400px]">
               <div className="flex justify-between items-center mb-6 gap-2">
@@ -229,7 +227,7 @@ export default function TiendaPage() {
         </div>
       </div>
 
-      {/* Modal Agregar Docente - Responsive */}
+      {/* Modal Agregar Docente */}
       {showModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-3xl w-full max-w-sm shadow-2xl relative">
